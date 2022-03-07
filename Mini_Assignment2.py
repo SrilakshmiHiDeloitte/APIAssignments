@@ -75,16 +75,20 @@ def test_authenticate():
     payload = {
         "phone": "+919391022222",
         "LoginType": "password",
-        "password": "Srilakshmi"
+        "password": "Srilshmi"
     }
     endpoint = 'https://hbs-ob-stage.herokuapp.com/authenticate'
     response = requests.post(url=endpoint, json=payload)
     print(response.json())
-    token = 'Bearer' + str(response.json()[1])
+    assert response.status_code == 201
+
+
+def test_login_testing():
+    endpoint = 'https://hbs-ob-stage.herokuapp.com/protected_test'
+    headers = {
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjQ2NjQ3MjU1LCJqdGkiOiJhYjA5NzlkZC04YzU3LTRiNWItOWVkMS1iOTg1MDIyN2U3NDIiLCJuYmYiOjE2NDY2NDcyNTUsInR5cGUiOiJhY2Nlc3MiLCJzdWIiOiI2MjI1ZDdkMDUwZjczMGY0OWU3NTBjODgiLCJleHAiOjE2NDY2NDgxNTV9.PRICYbqi5Syl3fXiTX7_eu9t0kteRBqceEOlx-KJ5Ug'}
+    response = requests.get(endpoint, headers=headers)
+    print(response.json())
     assert response.status_code == 200
 
-    # test_login_testing:
-    endpoint = 'https://hbs-ob-stage.herokuapp.com/protected_test'
-    headers = {'Authorization': token}
-    print(requests.post(endpoint, data=data, headers=headers).json())
-    assert requests.status_code == 200
+
