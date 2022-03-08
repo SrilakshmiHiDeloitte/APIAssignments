@@ -126,19 +126,28 @@ def test_adding20_tasks_backup_excel():
         df.to_excel('C:\\Users\\visrilakshmi\\PycharmProjects\\pythonProject2\\venv\\Scripts\\Task_List.xlsx')
 
 
-@pytest.mark.parametrize('skip, end', [(2, 20)])
+@pytest.mark.parametrize('skip, end', [(2,20),(5,20),(10,20)])
 def test_get_pages(skip, end):
+    y = test_user_login_task()
+    print(y)
+    for key, value in y.items():
+        if key == 'token':
+            token = value
     payload = {
-        "email": "srilakshmivinn@gmail.com",
-        "LoginType": "password",
-        "password": "HiDeloitte12345"
+    "email": "srilakshmivinn@gmail.com",
+    "LoginType": "password",
+    "password": "HiDeloitte12345"
     }
     endpoint = 'https://api-nodejs-todolist.herokuapp.com/task?'
-    endpoint = endpoint + 'limit=' + str(skip) + '&skip=' + str(end)
+    response = requests.get(endpoint,
+                            auth=HTTPBasicAuth('srilakshmivinn@gmail.com', 'HiDeloitte12345'))
+    endpoint = endpoint+'limit='+str(skip)+'&skip='+str(end)
     print(endpoint)
-    response = requests.post(endpoint, payload)
+    Bearer = 'Bearer ' + str(token)
+    print(Bearer)
     headers = {
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjQ2NjQ3MjU1LCJqdGkiOiJhYjA5NzlkZC04YzU3LTRiNWItOWVkMS1iOTg1MDIyN2U3NDIiLCJuYmYiOjE2NDY2NDcyNTUsInR5cGUiOiJhY2Nlc3MiLCJzdWIiOiI2MjI1ZDdkMDUwZjczMGY0OWU3NTBjODgiLCJleHAiOjE2NDY2NDgxNTV9.PRICYbqi5Syl3fXiTX7_eu9t0kteRBqceEOlx-KJ5Ug'}
+        'Authorization': Bearer}
+    headers = {'Authorization': Bearer}
     response = requests.get(endpoint, headers=headers)
     print(response.json())
     assert response.status_code == 200
