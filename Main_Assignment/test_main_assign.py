@@ -5,6 +5,7 @@ from openpyxl.workbook import Workbook
 from requests.auth import HTTPBasicAuth
 
 
+# Registering the user
 def test_register_user():
     payload = {
         "name": "Srilakshmi Vinnakota",
@@ -18,6 +19,7 @@ def test_register_user():
     assert response.status_code == 201
 
 
+# Logging in
 def test_user_login():
     for key, value in y.items():
         if key == 'token':
@@ -45,6 +47,7 @@ global y
 y = test_user_login_task()
 
 
+# Validating User
 def test_validate_user():
     for key, value in y.items():
         if key == 'token':
@@ -61,6 +64,7 @@ def test_validate_user():
     assert response.status_code == 200
 
 
+# Deleting the User
 def test_del_user():
     for key, value in y.items():
         if key == 'token':
@@ -81,6 +85,7 @@ def test_del_user():
     assert response.status_code == 200
 
 
+# Adding 20 Tasks
 def test_add_task():
     print(y)
     print(type(y))
@@ -107,26 +112,8 @@ def test_add_task():
         df.to_excel('C:\\Users\\visrilakshmi\\PycharmProjects\\pythonProject2\\venv\\Scripts\\task.xlsx')
 
 
-def test_adding20_tasks_backup_excel():
-    payload = {
-        "description": "Watching K-dramas", "description": "Listening music", "description": "Breakfast",
-        "description": "Evening Walk", "description": "Painting", "description": "Decorating",
-        "description": "Cleaning", "description": "Spend time with family", "description": "Arranging",
-        "description": "Exploring", "description": "Dancing", "description": 'Drawing', "description": 'Planting',
-        "description": 'Arranging', "description": 'Excercising', "description": 'Reading', "description": 'Writing',
-        "description": 'Travelling', "description": 'Washing', "description": 'Singing', "description": 'Spending'}
-    endpoint = 'https://api-nodejs-todolist.herokuapp.com/task'
-    headers = {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGRjY2JlYzZiNTVkYTAwMTc1OTcyMmMiLCJpYXQiOjE1NzQ3NTE2ODh9.GPbsl9FLX4VrsGVErodiXypjuz1us4tfD0jwg2_UrzY'}
-    response2 = requests.post(endpoint, json=payload, headers=headers)
-    print(response2.json())
-
-    if response2.status_code == 201:
-        df = pd.DataFrame(payload)
-        df.to_excel('C:\\Users\\visrilakshmi\\PycharmProjects\\pythonProject2\\venv\\Scripts\\Task_List.xlsx')
-
-
-@pytest.mark.parametrize('skip, end', [(2,20),(5,20),(10,20)])
+# Task by Pagination
+@pytest.mark.parametrize('skip, end', [(2, 20), (5, 20), (10, 20)])
 def test_get_pages(skip, end):
     y = test_user_login_task()
     print(y)
@@ -134,14 +121,14 @@ def test_get_pages(skip, end):
         if key == 'token':
             token = value
     payload = {
-    "email": "srilakshmivinn@gmail.com",
-    "LoginType": "password",
-    "password": "HiDeloitte12345"
+        "email": "srilakshmivinn@gmail.com",
+        "LoginType": "password",
+        "password": "HiDeloitte12345"
     }
     endpoint = 'https://api-nodejs-todolist.herokuapp.com/task?'
     response = requests.get(endpoint,
                             auth=HTTPBasicAuth('srilakshmivinn@gmail.com', 'HiDeloitte12345'))
-    endpoint = endpoint+'limit='+str(skip)+'&skip='+str(end)
+    endpoint = endpoint + 'limit=' + str(skip) + '&skip=' + str(end)
     print(endpoint)
     Bearer = 'Bearer ' + str(token)
     print(Bearer)
@@ -153,6 +140,7 @@ def test_get_pages(skip, end):
     assert response.status_code == 200
 
 
+# Getting all the data to an Excel file
 def test_get_tasklist_toexcl():
     for key, value in y.items():
         if key == 'token':
@@ -176,7 +164,6 @@ def test_get_tasklist_toexcl():
                 for j, m in i.items():
                     if j == 'description':
                         df = pd.DataFrame(i, index=[0])
-                        df = (df.T)
                         print(df)
                         df.to_excel(
                             'Main_Assignment/Tasklist.xlsx')
